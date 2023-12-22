@@ -554,10 +554,12 @@ def ql_syscall_execve(ql: Qiling, pathname: int, argv: int, envp: int):
 
     # is it safe to run?
     if not ql.os.path.is_safe_host_path(hpath):
+        ql.log.info("I am not sace path" + hpath)
         return -1   # EACCES
 
     # is it a file? does it exist?
     if not os.path.isfile(hpath):
+        ql.log.info("This path does not exist"+ hpath)
         return -1   # EACCES
 
     def __read_ptr_array(addr: int) -> Iterator[int]:
@@ -888,7 +890,7 @@ def __getdents_common(ql: Qiling, fd: int, dirp: int, count: int, *, is_64: bool
             d_name = (result.name if isinstance(result, os.DirEntry) else result._str).encode() + b'\x00'
             d_type = _type_mapping(result)
             d_reclen = n + n + 2 + len(d_name) + 1
-            d_reclen = (d_reclen + n) & ~(n - 1) # alignment
+            d_reclen = (d_reclen + n) & ~(n -1) # alignment
 
             # TODO: Dirty fix for X8664 MACOS 11.6 APFS
             # For some reason MACOS return int value is 64bit
