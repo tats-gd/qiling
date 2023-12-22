@@ -78,7 +78,10 @@ class QlDisk(QlFsMappedObject):
 
     def close(self):
         return self.fp.close()
-    
+
+    def fileno(self):
+        return self.fp.fileno()
+
     # Methods for QlDisk
     def lba(self, cylinder, head, sector):
         return (cylinder * self.n_heads + head) * self._n_sectors + sector - 1
